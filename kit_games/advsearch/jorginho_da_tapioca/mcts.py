@@ -38,8 +38,7 @@ def expansion(node: Node) -> Union[Node, None]: # plays one random move and crea
             return child_node
     return None
 
-
-def simulation(node: Node) -> int: # simulates a game randomly, returning 1 if won, 0 if lost or 0.5 if tied
+def simulation(node: Node) -> int: # simulates a game randomly
     state = node.state.copy()
     player = node.state.player
     while not state.is_terminal():
@@ -48,7 +47,7 @@ def simulation(node: Node) -> int: # simulates a game randomly, returning 1 if w
         state = state.next_state(next_move)
     winner = state.winner()
     if winner is None: # returns 0.5 if tied
-        return 0.5
+        return 0
     else:
         return 1 if winner == player else 0
     
@@ -79,5 +78,5 @@ def make_move(state) -> Tuple[int, int]:
         else:
             result = simulation(selected_node)
             backpropagation(selected_node, result)
-    best_child = max(root_node.children, key=lambda child: child.value / child.visits)
+    best_child = max(root_node.children, key=lambda child: child.value)
     return best_child.previous_move
