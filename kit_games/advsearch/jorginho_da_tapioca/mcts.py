@@ -1,5 +1,6 @@
 import random
 from typing import Tuple, Union
+import numpy as np
 
 # Voce pode criar funcoes auxiliares neste arquivo
 # e tambem modulos auxiliares neste pacote.
@@ -9,12 +10,13 @@ from typing import Tuple, Union
 
 class Node():
     def __init__(self, state, previous_move=None, parent=None) -> None:
-        self.state = state
-        self.previous_move = previous_move
-        self.parent = parent
-        self.visits = 0
-        self.value = 0
-        self.children = set()
+        self.state = state # current states
+        self.previous_move = previous_move # move that led up to this node 
+        self.parent = parent # parent node
+        self.visits = 0 # number of visits
+        self.value = 0 # number of wins
+        self.children = list() # children of this node
+        self._untried_moves = self._get_untried_moves() # moves that this node can make
 
     def is_leaf(self) -> bool:
         return len(self.children) == 0
@@ -22,40 +24,65 @@ class Node():
     def is_root(self) -> bool:
         return self.parent is None
 
-def selection(node: Node) -> Node:
-    while not node.is_leaf():
-        node = max(node.children, key=lambda child: child.value / child.visits)
-    return node
-
-def expansion(node: Node) -> Union[Node, None]: # plays one random move and creates a child node in the tree
-    if not node.state.is_terminal(): # doesnt expand terminal node
-        unexplored_moves = [move for move in node.state.legal_moves() if move not in [child_node.previous_move for child_node in node.children]]
-        if unexplored_moves:
-            move = random.choice(unexplored_moves)
-            new_state = node.state.next_state(move)
-            child_node = Node(new_state, move, node)
-            node.children.add(child_node)
-            return child_node
-    return None
-
-def simulation(node: Node) -> int: # simulates a game randomly
-    state = node.state.copy()
-    player = node.state.player
-    while not state.is_terminal():
-        legal_moves = list(state.legal_moves())
-        next_move = random.choice(legal_moves)
-        state = state.next_state(next_move)
-    winner = state.winner()
-    if winner is None: # returns 0.5 if tied
-        return 0
-    else:
-        return 1 if winner == player else -1
+    def _get_untried_moves(self) -> list:
+        if not self.state.is_terminal():
+            return list(self.state.legal_moves())
+        else: 
+            return list()
     
-def backpropagation(node: Node, result: int) -> None: # propagates the result of the game along the tree
-    while not node.is_root():
-        node.value += result
-        node.visits += 1
-        node = node.parent
+    def is_fully_expanded(self) -> bool:
+        return self.state.is_terminal() or len(self._untried_moves) == 0
+    
+    def expand(self) -> "Node": # expands one node
+        move = self._untried_moves.pop() # selects one move from the node's untried moves
+        next_state = self.state.next_state(move)
+        child_node = Node(next_state, move, self) # expands node
+        self.children.append(child_node) # adds the new child
+
+        return child_node
+    
+    def select_best_child(self, c=0.1) -> "Node":
+        node_visits = 1 if self.visits == 0 else self.visits # so we dont divide by zero, nor do log of zero
+        children_ucb_values = []
+        for child in self.children:
+            child_visits = 1 if child.visits == 0 else child.visits # so we dont divide by zero
+            children_ucb_values.append((child.value / child_visits) + c * np.sqrt((2 * np.log(node_visits) / child_visits)))
+        return self.children[np.argmax(children_ucb_values)] # gets child with highest ucb value
+    
+    def selection_and_expansion(self): 
+        current_node = self
+        while not current_node.state.is_terminal(): # while the node is not terminal (end of game)
+            if not current_node.is_fully_expanded(): # if node hasnt been fully expanded yet
+                return current_node.expand() # expands node, that is, takes one legal action in the node's state
+            else:
+                current_node = current_node.select_best_child() # if it is fully expanded, go to the next layer in the tree, selecting the best child
+        return current_node # if terminal node is reached, return
+    
+    def simulation(self, player) -> int: # simulates a game randomly
+        state = self.state.copy()
+        while not state.is_terminal():
+            legal_moves = list(state.legal_moves())
+            next_move = random.choice(legal_moves)
+            state = state.next_state(next_move)
+        winner = state.winner()
+        if winner is None: # returns 0 if tied
+            return 0
+        else:
+            return 1 if winner == player else -1
+        
+    def backpropagation(self, result: int) -> None: # propagates the result of the game along the tree OK
+        while not self.is_root():
+            self.value += result
+            self.visits += 1
+            self = self.parent
+
+    def copy(self):
+        new_node = Node(self.state, self.previous_move, self.parent)
+        new_node.children = self.children.copy()
+        new_node.visits = self.visits
+        new_node.value = self.value
+        new_node._untried_moves = self._untried_moves.copy()
+        return new_node
 
 def make_move(state) -> Tuple[int, int]:
     """
@@ -67,16 +94,12 @@ def make_move(state) -> Tuple[int, int]:
     :return: (int, int) tuple with x, y coordinates of the move (remember: 0 is the first row/column)
     """
 
-    root_node = Node(state)
-    iterations = 5000 # "depth" of search
+    root_node = Node(state.copy())
+    player = root_node.state.player
+    iterations = 100 # "depth" of search
     for _ in range(iterations): # we will have 5 seconds to make a play (i hope so)
-        selected_node = selection(root_node)
-        leaf_node = expansion(selected_node)
-        if leaf_node is not None:
-            result = simulation(leaf_node)
-            backpropagation(leaf_node, result)
-        else:
-            result = simulation(selected_node)
-            backpropagation(selected_node, result)
-    best_child = max(root_node.children, key=lambda child: child.value)
+        explored_node = root_node.selection_and_expansion() # selects node to be simulated
+        result = explored_node.simulation(player) # simulates node, given that the player is the root node
+        explored_node.backpropagation(result) # propagates the result up the tree
+    best_child = root_node.select_best_child(c=0) # selects the best child of the root node to make the move, with no exploration
     return best_child.previous_move
