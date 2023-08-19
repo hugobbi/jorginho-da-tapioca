@@ -49,7 +49,7 @@ def simulation(node: Node) -> int: # simulates a game randomly
     if winner is None: # returns 0.5 if tied
         return 0
     else:
-        return 1 if winner == player else 0
+        return 1 if winner == player else -1
     
 def backpropagation(node: Node, result: int) -> None: # propagates the result of the game along the tree
     while not node.is_root():
@@ -68,7 +68,7 @@ def make_move(state) -> Tuple[int, int]:
     """
 
     root_node = Node(state)
-    iterations = 1000 # "depth" of search
+    iterations = 5000 # "depth" of search
     for _ in range(iterations): # we will have 5 seconds to make a play (i hope so)
         selected_node = selection(root_node)
         leaf_node = expansion(selected_node)
