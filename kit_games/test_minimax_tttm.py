@@ -6,8 +6,8 @@ from advsearch.tttm.gamestate import GameState
 import advsearch.timer as timer
 
 # mude your_agent pelo nome do seu modulo nos imports abaixo
-import advsearch.your_agent.minimax as minimax          
-import advsearch.your_agent.tttm_minimax as tttm_agent  
+import advsearch.jorginho_da_tapioca.minimax as minimax          
+import advsearch.jorginho_da_tapioca.tttm_minimax as tttm_agent  
 
 def mirror_move(state: GameState) -> Tuple[int, int]:
     """
@@ -77,7 +77,7 @@ BW.
         move = self.run_with_timeout(60, minimax.minimax_move, (state, -1, tttm_agent.utility) )
 
         # checa se a primeira jogada e' no centro
-        self.assertEquals(move, (1, 1), "Erro: a primeira jogada deve ser no centro, senao o jogo sera' perdido")
+        self.assertEqual(move, (1, 1), "Erro: a primeira jogada deve ser no centro, senao o jogo sera' perdido")
 
     def test_proven_win_exploiting_first_blunder(self):
         """
