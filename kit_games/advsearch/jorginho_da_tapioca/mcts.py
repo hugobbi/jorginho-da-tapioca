@@ -96,7 +96,7 @@ def make_move(state) -> Tuple[int, int]:
 
     root_node = Node(state.copy())
     player = root_node.state.player
-    iterations = 100 # "depth" of search
+    iterations = 300 # "depth" of search
     for _ in range(iterations): # we will have 5 seconds to make a play (i hope so)
         explored_node = root_node.selection_and_expansion() # selects node to be simulated
         result = explored_node.simulation(player) # simulates node, given that the player is the root node

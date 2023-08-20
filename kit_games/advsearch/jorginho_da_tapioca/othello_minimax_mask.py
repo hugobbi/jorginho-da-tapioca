@@ -58,12 +58,11 @@ def evaluate_mask(state, player:str) -> float:
     else:
         opponent = "W" if player == "B" else "B"
         player_points = 0
-        opponent_points = 0
         board = state.board.tiles
         for line_board, line_mask in zip(board, EVAL_TEMPLATE):
             for tile, value in zip(line_board, line_mask):
-                if tile == player:
+                if tile in player:
                     player_points += value
-                elif tile == opponent:
-                    opponent_points += value
-        return player_points - opponent_points 
+                elif tile in opponent:
+                    player_points -= value
+        return player_points
