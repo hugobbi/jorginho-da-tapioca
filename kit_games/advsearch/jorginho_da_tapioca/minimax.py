@@ -1,5 +1,3 @@
-import random
-import numpy as np
 from typing import Tuple, Callable
 
 class Node():
@@ -9,14 +7,6 @@ class Node():
         self.parent = parent
         self.children = list()
         self.value = 0 # evaluation of this state
-    
-    def expand(self) -> None:
-        if not self.state.is_terminal():
-            legal_actions = list(self.state.legal_moves())
-            for action in legal_actions:
-                next_state = self.state.next_state(action)
-                child_node = Node(next_state, action, self)
-                self.children.append(child_node)
 
 
 def minimax(node: Node, player: str, alpha: float, beta: float, max_depth: int, eval_function: Callable, is_max: bool):
