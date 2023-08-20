@@ -7,7 +7,7 @@ class Node():
         self.state = state
         self.action = action # action that led up to this state
         self.parent = parent
-        self.children = set()
+        self.children = list()
         self.value = 0 # evaluation of this state
     
     def expand(self) -> None:
@@ -16,7 +16,7 @@ class Node():
             for action in legal_actions:
                 next_state = self.state.next_state(action)
                 child_node = Node(next_state, action, self)
-                self.children.add(child_node)
+                self.children.append(child_node)
 
 
 def minimax(node: Node, player: str, alpha: float, beta: float, max_depth: int, eval_function: Callable, is_max: bool):
@@ -31,10 +31,10 @@ def minimax(node: Node, player: str, alpha: float, beta: float, max_depth: int, 
         for action in legal_actions: # if we can order by best move, itll improve algorithm
             new_state = node.state.next_state(action)
             child_node = Node(new_state, action, node) # creates new child node 
-            node.children.add(child_node)
+            node.children.append(child_node)
             evaluation = minimax(child_node, player, alpha, beta, max_depth - 1, eval_function, is_max=False)
             max_value = max(max_value, evaluation)
-            alpha = max(alpha, max_value)
+            alpha = max(alpha, evaluation)
             if alpha >= beta:
                 break
         node.value = max_value
@@ -47,10 +47,10 @@ def minimax(node: Node, player: str, alpha: float, beta: float, max_depth: int, 
         for action in legal_actions: # if we can order by best move, itll improve algorithm
             new_state = node.state.next_state(action)
             child_node = Node(new_state, action, node) # creates new child node 
-            node.children.add(child_node)
+            node.children.append(child_node)
             evaluation = minimax(child_node, player, alpha, beta, max_depth - 1, eval_function, is_max=True)
-            min_value = max(min_value, evaluation)
-            beta = min(beta, min_value)
+            min_value = min(min_value, evaluation)
+            beta = min(beta, evaluation)
             if beta <= alpha:
                 break
         node.value = min_value

@@ -24,7 +24,7 @@ def make_move(state: GameState) -> Tuple[int, int]:
     # a sua implementacao da poda alpha-beta. Use profundidade ilimitada na sua entrega,
     # uma vez que o jogo tem profundidade maxima 9. 
     # Preencha a funcao utility com o valor de um estado terminal e passe-a como funcao de avaliação para seu minimax_move
-
+    
     return minimax_move(state, -1, utility)
 
 def utility(state, player:str) -> float:

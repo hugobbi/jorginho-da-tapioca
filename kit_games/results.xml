@@ -1,20 +1,17 @@
 <?xml version="1.0" ?>
 <othello-match>
-	<timing start="Sat Aug 19 23:34:14 2023" finish="Sat Aug 19 23:34:14 2023"/>
-	<player directory="advsearch/randomplayer" color="B" result="draw" score="0"/>
+	<timing start="Sun Aug 20 01:18:09 2023" finish="Sun Aug 20 01:18:09 2023"/>
+	<player directory="advsearch/jorginho_da_tapioca" color="B" result="draw" score="0"/>
 	<player directory="advsearch/jorginho_da_tapioca" color="W" result="draw" score="0"/>
 	<moves>
-		<move coord="0,2" color="B"/>
-		<move coord="2,1" color="W"/>
-		<move coord="0,0" color="B"/>
-		<move coord="2,1" color="W"/>
-		<move coord="2,1" color="W"/>
+		<move coord="1,1" color="B"/>
 		<move coord="0,1" color="W"/>
-		<move coord="2,0" color="B"/>
-		<move coord="0,2" color="W"/>
+		<move coord="2,1" color="B"/>
+		<move coord="2,0" color="W"/>
+		<move coord="0,2" color="B"/>
+		<move coord="2,2" color="W"/>
+		<move coord="0,0" color="B"/>
 		<move coord="1,2" color="W"/>
-		<move coord="2,2" color="B"/>
-		<move coord="2,1" color="W"/>
-		<move coord="2,1" color="W"/>
+		<move coord="1,0" color="B"/>
 	</moves>
 </othello-match>
