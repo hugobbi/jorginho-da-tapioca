@@ -65,10 +65,11 @@ def minimax_move(state, max_depth:int, eval_func:Callable) -> Tuple[int, int]:
     :return: (int, int) tuple with x, y coordinates of the move (remember: 0 is the first row/column)
     """
 
-    timer = Timer(4.9) # maximum time that minimax algorithm can execute
-    root_node = Node(state)
+    timer = Timer(4.7) # maximum time that minimax algorithm can execute
     player = state.player
+    is_max = True
+    root_node = Node(state)
     infinity = float("inf")
-    minimax(root_node, player, -infinity, infinity, max_depth, eval_func, timer, is_max=True)
+    minimax(root_node, player, -infinity, infinity, max_depth, eval_func, timer, is_max)
     best_child =  max(root_node.children, key=lambda child: child.value) # root_node.children[np.argmax([child.value for child in root_node.children])]
     return best_child.action

@@ -1,12 +1,21 @@
 import random
-from typing import Tuple, Union
+from typing import Tuple
 import numpy as np
+import time
 
 # Voce pode criar funcoes auxiliares neste arquivo
 # e tambem modulos auxiliares neste pacote.
 #
 # Nao esqueca de renomear 'your_agent' com o nome
 # do seu agente.
+
+class Timer():
+    def __init__(self, max_time: float) -> None:
+        self.start_time = time.time()
+        self.max_time = max_time
+    
+    def check_timer(self) -> bool:
+        return time.time() - self.start_time >= self.max_time
 
 class Node():
     def __init__(self, state, previous_move=None, parent=None) -> None:
@@ -94,10 +103,10 @@ def make_move(state) -> Tuple[int, int]:
     :return: (int, int) tuple with x, y coordinates of the move (remember: 0 is the first row/column)
     """
 
+    timer = Timer(4.9)
     root_node = Node(state.copy())
     player = root_node.state.player
-    iterations = 300 # "depth" of search
-    for _ in range(iterations): # we will have 5 seconds to make a play (i hope so)
+    while not timer.check_timer(): # while there is time
         explored_node = root_node.selection_and_expansion() # selects node to be simulated
         result = explored_node.simulation(player) # simulates node, given that the player is the root node
         explored_node.backpropagation(result) # propagates the result up the tree

@@ -34,7 +34,7 @@ def make_move(state) -> Tuple[int, int]:
     # Remova-o e coloque uma chamada para o minimax_move (que vc implementara' no modulo minimax).
     # A chamada a minimax_move deve receber sua funcao evaluate como parametro.
 
-    max_depth = 12
+    max_depth = 20
     return minimax_move(state, max_depth, evaluate_custom)
 
 
@@ -51,20 +51,20 @@ def evaluate_custom(state, player:str) -> float: # uses mask + mobility
         if winner is None:
             return 0
         else:
-            return 131 if winner == player else -131
+            return 500 if winner == player else -500
     else:
+        legal_moves = len(list(state.legal_moves()))
         opponent = "W" if player == "B" else "B"
-        player_pieces = 0
-        opponent_pieces = 0
         player_points = 0
-        opponent_points = 0
+        player_coins = 0
         board = state.board.tiles
         for line_board, line_mask in zip(board, EVAL_TEMPLATE):
             for tile, value in zip(line_board, line_mask):
                 if tile == player:
-                    player_pieces += 1
+                    player_coins += 1
                     player_points += value
                 elif tile == opponent:
-                    opponent_pieces += 1
-                    opponent_points += value
-        return (player_points + player_pieces) - (opponent_points + opponent_pieces)
+                    player_coins -= 1
+                    player_points -= value
+        return player_points + player_coins + legal_moves
+    

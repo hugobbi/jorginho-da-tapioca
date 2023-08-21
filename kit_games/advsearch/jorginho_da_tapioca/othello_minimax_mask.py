@@ -36,7 +36,7 @@ def make_move(state) -> Tuple[int, int]:
     # Remova-o e coloque uma chamada para o minimax_move (que vc implementara' no modulo minimax).
     # A chamada a minimax_move deve receber sua funcao evaluate como parametro.
 
-    max_depth = 12
+    max_depth = 20
     return minimax_move(state, max_depth, evaluate_mask)
 
 
@@ -61,8 +61,8 @@ def evaluate_mask(state, player:str) -> float:
         board = state.board.tiles
         for line_board, line_mask in zip(board, EVAL_TEMPLATE):
             for tile, value in zip(line_board, line_mask):
-                if tile in player:
+                if tile == player:
                     player_points += value
-                elif tile in opponent:
+                elif tile == opponent:
                     player_points -= value
         return player_points

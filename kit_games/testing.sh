@@ -1,11 +1,11 @@
 #!/bin/bash
 
-for num in {1..20}
+for num in {1..10}
 do
     if ((num % 2 == 0)); then
-        python server.py othello advsearch/jorginho_da_tapioca/othello_minimax_mask.py advsearch/randomplayer/agent.py
+        python server.py othello advsearch/jorginho_da_tapioca/othello_minimax_mask.py advsearch/jorginho_da_tapioca/othello_minimax_count.py
     else
-        python server.py othello advsearch/randomplayer/agent.py advsearch/jorginho_da_tapioca/othello_minimax_mask.py
+        python server.py othello advsearch/jorginho_da_tapioca/othello_minimax_count.py advsearch/jorginho_da_tapioca/othello_minimax_mask.py
     fi
 done
 
