@@ -2,7 +2,7 @@ import unittest
 from collections import OrderedDict, defaultdict
 from typing import Tuple, Union
 
-import advsearch.jorginho_da_tapioca.mcts as mcts # mude your_agent pelo nome do seu modulo
+import advsearch.your_agent.mcts as mcts  # mude your_agent pelo nome do seu modulo
 
 
 # jogo muito simples. o estado inicial tem 3 sucessores, 
@@ -114,6 +114,8 @@ class GameState:
         return move in self.game_tree[self.board.board]
 
     def legal_moves(self) -> set:
+        if self.is_terminal():  # um estado terminal tem um conjunto vazio de jogadas
+            return set()
         moves = set()
         return self.game_tree[self.board.board].keys()
 
