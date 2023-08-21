@@ -85,13 +85,6 @@ class Node():
             self.visits += 1
             self = self.parent
 
-    def copy(self):
-        new_node = Node(self.state, self.previous_move, self.parent)
-        new_node.children = self.children.copy()
-        new_node.visits = self.visits
-        new_node.value = self.value
-        new_node._untried_moves = self._untried_moves.copy()
-        return new_node
 
 def make_move(state) -> Tuple[int, int]:
     """

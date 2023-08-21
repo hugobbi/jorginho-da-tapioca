@@ -1,13 +1,6 @@
 from typing import Tuple, Callable
 import time
 
-class Node():
-    def __init__(self, state, action=None) -> None:
-        self.state = state
-        self.action = action # action that led up to this state
-        self.children = list()
-        self.value = 0 # evaluation of this state
-
 class Timer():
     def __init__(self, max_time: float) -> None:
         self.start_time = time.time()
@@ -16,42 +9,40 @@ class Timer():
     def check_timer(self) -> bool:
         return time.time() - self.start_time >= self.max_time
 
-def minimax(node: Node, player: str, alpha: float, beta: float, max_depth: int, eval_function: Callable, timer: Timer, is_max: bool):
+def minimax(state, player: str, alpha: float, beta: float, max_depth: int, eval_function: Callable, timer: Timer, is_max: bool):
     # verify depth and time
-    if max_depth == 0 or node.state.is_terminal() or timer.check_timer():
-        return eval_function(node.state, player)
+    if max_depth == 0 or state.is_terminal() or timer.check_timer():
+        return eval_function(state, player), None
 
     # max
     if is_max:
         max_value = float("-inf")
-        legal_actions = list(node.state.legal_moves())
-        for action in legal_actions: # if we can order by best move, itll improve algorithm
-            new_state = node.state.next_state(action)
-            child_node = Node(new_state, action) # creates new child node 
-            node.children.append(child_node)
-            evaluation = minimax(child_node, player, alpha, beta, max_depth - 1, eval_function, timer, is_max=False)
-            max_value = max(max_value, evaluation)
-            alpha = max(alpha, evaluation)
+        max_action = None
+        for action in state.legal_moves():
+            child_state = state.next_state(action)
+            evaluation, x = minimax(child_state, player, alpha, beta, max_depth - 1, eval_function, timer, is_max=False)
+            if evaluation > max_value:
+                max_value = evaluation
+                max_action = action
+            alpha = max(alpha, max_value)
             if alpha >= beta:
                 break
-        node.value = max_value
-        return max_value
+        return max_value, max_action
     
     # min
     else: 
         min_value = float("+inf")
-        legal_actions = list(node.state.legal_moves())
-        for action in legal_actions: # if we can order by best move, itll improve algorithm
-            new_state = node.state.next_state(action)
-            child_node = Node(new_state, action) # creates new child node 
-            node.children.append(child_node)
-            evaluation = minimax(child_node, player, alpha, beta, max_depth - 1, eval_function, timer, is_max=True)
-            min_value = min(min_value, evaluation)
-            beta = min(beta, evaluation)
-            if beta <= alpha:
+        min_action = None
+        for action in state.legal_moves(): 
+            child_state = state.next_state(action)
+            evaluation, x = minimax(child_state, player, alpha, beta, max_depth - 1, eval_function, timer, is_max=True)
+            if evaluation < min_value:
+                min_value = evaluation
+                min_action = action
+            beta = min(beta, min_value)
+            if alpha >= beta:
                 break
-        node.value = min_value
-        return min_value
+        return min_value, min_action
 
 
 def minimax_move(state, max_depth:int, eval_func:Callable) -> Tuple[int, int]:
@@ -68,8 +59,6 @@ def minimax_move(state, max_depth:int, eval_func:Callable) -> Tuple[int, int]:
     timer = Timer(4.7) # maximum time that minimax algorithm can execute
     player = state.player
     is_max = True
-    root_node = Node(state)
     infinity = float("inf")
-    minimax(root_node, player, -infinity, infinity, max_depth, eval_func, timer, is_max)
-    best_child =  max(root_node.children, key=lambda child: child.value) # root_node.children[np.argmax([child.value for child in root_node.children])]
-    return best_child.action
+    value, action = minimax(state, player, -infinity, infinity, max_depth, eval_func, timer, is_max)
+    return action
