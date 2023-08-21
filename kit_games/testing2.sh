@@ -1,6 +1,6 @@
 #!/bin/bash
 
-for num in {1..10}
+for num in {1..2}
 do
     if ((num % 2 == 0)); then
     	echo "p1 mask %"

@@ -34,7 +34,7 @@ def make_move(state) -> Tuple[int, int]:
     # Remova-o e coloque uma chamada para o minimax_move (que vc implementara' no modulo minimax).
     # A chamada a minimax_move deve receber sua funcao evaluate como parametro.
 
-    max_depth = 20
+    max_depth = 50
     return minimax_move(state, max_depth, evaluate_custom)
 
 
@@ -46,32 +46,20 @@ def evaluate_custom(state, player:str) -> float: # uses mask + mobility
     :param state: state to evaluate (instance of GameState)
     :param player: player to evaluate the state for (B or W)
     """
-    legal_moves = len(list(state.legal_moves()))
-    opponent = "W" if player == "B" else "B"
-    player_points, player_coins = 0, 0
-    points_weight, coins_weight, moves_weight = 0.7, 0.1, 0.2
-    board = state.board.tiles
-    for line_board, line_mask in zip(board, EVAL_TEMPLATE):
-        for tile, value in zip(line_board, line_mask):
-            if tile == player:
-                player_coins += 1
-                player_points += value
-            elif tile == opponent:
-                player_coins -= 1
-                player_points -= value
-    return player_points * points_weight + player_coins * coins_weight + legal_moves * moves_weight
-    '''
     if state.is_terminal():
         winner = state.winner()
         if winner is None:
             return 0
         else:
-            return 500 if winner == player else -500
+            return 74 if winner == player else -74
     else:
         legal_moves = len(list(state.legal_moves()))
         opponent = "W" if player == "B" else "B"
-        player_points, player_coins = 0, 0
-        points_weight, coins_weight, moves_weight = 0.7, 0.1, 0.2
+        player_points = 0
+        player_coins = 0
+        points_weight = 1
+        coins_weight = 0.0
+        moves_weight = 0.0
         board = state.board.tiles
         for line_board, line_mask in zip(board, EVAL_TEMPLATE):
             for tile, value in zip(line_board, line_mask):
@@ -82,5 +70,3 @@ def evaluate_custom(state, player:str) -> float: # uses mask + mobility
                     player_coins -= 1
                     player_points -= value
         return player_points * points_weight + player_coins * coins_weight + legal_moves * moves_weight
-    '''
-    
