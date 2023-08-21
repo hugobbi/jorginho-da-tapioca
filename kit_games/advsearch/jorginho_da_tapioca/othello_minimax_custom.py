@@ -55,8 +55,8 @@ def evaluate_custom(state, player:str) -> float: # uses mask + mobility
     else:
         legal_moves = len(list(state.legal_moves()))
         opponent = "W" if player == "B" else "B"
-        player_points = 0
-        player_coins = 0
+        player_points, player_coins = 0, 0
+        points_weight, coins_weight, moves_weight = 0.7, 0.1, 0.2
         board = state.board.tiles
         for line_board, line_mask in zip(board, EVAL_TEMPLATE):
             for tile, value in zip(line_board, line_mask):
@@ -66,5 +66,5 @@ def evaluate_custom(state, player:str) -> float: # uses mask + mobility
                 elif tile == opponent:
                     player_coins -= 1
                     player_points -= value
-        return player_points + player_coins + legal_moves
+        return player_points * points_weight + player_coins * coins_weight + legal_moves * moves_weight
     
