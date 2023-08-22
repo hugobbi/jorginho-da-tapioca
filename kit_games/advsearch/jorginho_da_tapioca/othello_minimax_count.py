@@ -22,7 +22,7 @@ def make_move(state) -> Tuple[int, int]:
     # Remova-o e coloque uma chamada para o minimax_move (que vc implementara' no modulo minimax).
     # A chamada a minimax_move deve receber sua funcao evaluate como parametro.
     
-    max_depth = 50
+    max_depth = 15
     return minimax_move(state, max_depth, evaluate_count)
 
 

@@ -35,7 +35,7 @@ def make_move(state) -> Tuple[int, int]:
     # a primeira jogada 
     # Remova-o e coloque a sua implementacao da poda alpha-beta
 
-    max_depth = 20
+    max_depth = 15
     return minimax_move(state, max_depth, evaluate_custom)
 
 def evaluate_custom(state, player:str) -> float: # uses mask + mobility + coin

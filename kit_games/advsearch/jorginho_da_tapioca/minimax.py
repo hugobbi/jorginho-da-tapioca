@@ -56,7 +56,7 @@ def minimax_move(state, max_depth:int, eval_func:Callable) -> Tuple[int, int]:
     :return: (int, int) tuple with x, y coordinates of the move (remember: 0 is the first row/column)
     """
 
-    timer = Timer(4.7) # maximum time that minimax algorithm can execute
+    timer = Timer(4.5) # maximum time that minimax algorithm can execute
     player = state.player
     is_max = True
     infinity = float("inf")
