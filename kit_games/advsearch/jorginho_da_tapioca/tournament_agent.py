@@ -21,7 +21,6 @@ EVAL_TEMPLATE = [
     [100, -30, 6, 2, 2, 6, -30, 100]
 ]
 
-
 def make_move(state) -> Tuple[int, int]:
     """
     Returns a move for the given game state. 
@@ -36,7 +35,7 @@ def make_move(state) -> Tuple[int, int]:
     # a primeira jogada 
     # Remova-o e coloque a sua implementacao da poda alpha-beta
 
-    max_depth = 50
+    max_depth = 20
     return minimax_move(state, max_depth, evaluate_custom)
 
 def evaluate_custom(state, player:str) -> float: # uses mask + mobility + coin
@@ -52,21 +51,28 @@ def evaluate_custom(state, player:str) -> float: # uses mask + mobility + coin
         if winner is None:
             return 0
         else:
-            return 500 if winner == player else -500
+            return 100 if winner == player else -100
     else:
-        legal_moves = len(list(state.legal_moves()))
         opponent = "W" if player == "B" else "B"
-        player_points, player_coins = 0, 0
-        points_weight, coins_weight, moves_weight = 0.7, 0.2, 0.1
+        player_moves = len(list(state.legal_moves()))
+        state.player = opponent
+        opponent_moves = len(list(state.legal_moves()))
+        state.player = player
+        player_mobility = player_moves - opponent_moves
+        player_points = 0
+        player_coins = 0
+        points_weight = 0.4
+        coins_weight = 0.1
+        moves_weight = 0.4
         board = state.board.tiles
-        for line_board, line_mask in zip(board, EVAL_TEMPLATE):
-            for tile, value in zip(line_board, line_mask):
+        for tile_line, mask_line in zip(board, EVAL_TEMPLATE):
+            for tile, value in zip(tile_line, mask_line):
                 if tile == player:
                     player_coins += 1
                     player_points += value
                 elif tile == opponent:
                     player_coins -= 1
                     player_points -= value
-        return player_points * points_weight + player_coins * coins_weight + legal_moves * moves_weight
+        return player_points * points_weight + player_coins * coins_weight + player_mobility * moves_weight
 
 

@@ -42,35 +42,35 @@ Todos os resultados, utilizando as jogadas perfeitas do site e registrando as jo
 
 (I): Função de avaliação customizada
 
-A função de avaliação customizada utiliza a combinação de 3 fatores: o valor das casas do tabuleiro, o número de moedas e a quantidade de novos movimentos.
-Para cada um desses valores, um peso, entre 0 e 1, é associado, dando mais relevância a alguma característica. Assim, a avaliação ocorre da seguinte forma:
+A função de avaliação customizada utiliza a combinação de 3 fatores: o valor das casas do tabuleiro, o número de peças e a quantidade de movimentos.
+Para cada um desses valores, um peso, entre 0 e 1, é multiplicado, dando mais relevância a alguma característica. Assim, a avaliação ocorre da seguinte forma:
 se é um estado terminal, a utilidade do estado é retornada. Senão, é calculado o valor estimado daquele estado. Para isso, para cada posição no tabuleiro, 
 é verificado se há uma peça do player, somando o valor daquela casa em um acumulador, ou se há uma peça do oponente, descontando o valor da casa do 
 acumulador. Além disso, com outro acumulador, é contado o número de peças do player e descontado o número de peças do oponente. Ademais, é tomada a quantidade
-de movimentos legais que o player pode fazer naquele estado. Com isso, o valor dessas três variáveis é retornado, sendo cada um multiplicado a um peso, 
-p_valor, p_peça e p_mobilidade.
+de movimentos legais que o player pode fazer naquele estado - subtraído pela quantidade de movimentos legais que o oponente pode fazer naquele estado. Com  isso, o valor dessas três variáveis é retornado, e cada um é multiplicado a um peso, p_valor, p_peça e p_mobilidade respectivamente.
 
 (II): Descrição do critério de parada
 
-No nosso algoritmo, temos três critérios de parada: uma profundidade limite (d), se o estado atual é terminal ou se o temporizador atingiu o limite de tempo
-por jogada. No trabalho, foram dados 5 segundos para calcular o próximo movimento, dessa forma, como medida de segurança para não ser desqualificado por 
-demorar tempo demais, foi implementado um temporizador de 4.7 segundos que, dado o limite de tempo, retorna o valor e a ação da busca. Dessa forma, é como se
-tivéssemos uma profundidade dinâmica, indo mais fundo na área de busca enquanto tivermos tempo. Não colocamos 5 segundos de temporizador nem mais do que 4.7,
-pois, em alguns testes, era comum sofrermos penalidade por tempo, mesmo com essa restrição de tempo, já que o algoritmo tinha ainda que responder todas as  chamadas recursivas do minimax. Para o MCTS, por outro lado, deixamos um tempo fixo de 4.9 segundos, que não nos deu problemas. Assim, ele simula vários jogos
-aleatoriamente enquanto tiver tempo disponível.
+Para o nosso algoritmo do minimax, temos três critérios de parada: uma profundidade limite (d), se o estado atual é terminal ou se o temporizador atingiu o 
+limite de tempo por jogada. No trabalho, foram dados 5 segundos para calcular o próximo movimento, dessa forma, como medida de segurança para não ser 
+desqualificado por demorar tempo demais, foi implementado um temporizador que conta um número máximo de segundos que uma chamada de minimax pode levar. Dessa forma, é como se tivéssemos uma profundidade dinâmica, indo mais fundo na área de busca enquanto tivermos tempo. Não colocamos 5 segundos de temporizador nem mais do que 4.7, pois, em alguns testes, era comum sofrermos penalidade por tempo, mesmo com essa restrição de tempo, já que o algoritmo tinha ainda que responder todas as  chamadas recursivas do minimax. 
+
+Para o MCTS, por outro lado, deixamos um tempo fixo de 4.9 segundos, que não nos deu problemas. Assim, ele simula vários jogos aleatoriamente enquanto tiver tempo disponível.
 
 (III): Resultado da avaliação
 
 Os testes demonstraram que a função de avaliação customizada obteve melhores resultados contra todos os outros algoritmos, incluíndo o MCTS. Os valores dos 
-pesos associados a cada avaliação do estado foram os seguintes: p_valor = 0.8, p_peça = 0.1 e p_mobilidade = 0.1. Além disso, a profundidade máxima com 
-melhor desempenho foi a de 50, sendo que o tempo limite por lance foi marcado em 4.7 segundos. Nos testes, de 10 jogos contra cada um dos outros algoritmos, 
+pesos associados a cada avaliação do estado foram os seguintes: p_valor = 0.6, p_peça = 0.1 e p_mobilidade = 0.3. Além disso, a profundidade máxima com 
+melhor desempenho foi a de 20, sendo que o tempo limite por lance foi marcado em 4.7 segundos. Nos testes, de 10 jogos contra cada um dos outros algoritmos, 
 a função custom ganhou todos os 10, somando 30 vitórias.
 
 (IV): Implementação escolhida para o torneio
 
-A implementação escolhida para o torneio foi a customizada, p_valor = 0.8, p_peça = 0.1 e p_mobilidade = 0.1, profundidade máxima 50 e tempo limite de 4.7 segundos.
+A implementação escolhida para o torneio foi a customizada, p_valor = 0.6, p_peça = 0.1 e p_mobilidade = 0.3, profundidade máxima 20 e tempo limite de 4.7 segundos.
 
 Feedback:
 
-A utilização de assistentes de IA com certeza facilitou a implementação dos algoritmos.
+A utilização de assistentes de IA com certeza facilitou a implementação dos algoritmos, pois nos dá uma visão customizada de todos os pontos do algoritmo.
+O maior problema, porém, foi a diferença entre a representação do jogo pela IA e a representação do jogo que nos foi dada. Isso afeta bastante o retorno do
+algoritmo, e, portanto, tivemos dificuldade quanto a isso. Além disso, a IA foi muito boa para bolar novas heurísticas para o jogo.
 
