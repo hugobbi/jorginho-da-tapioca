@@ -54,7 +54,7 @@ def evaluate_mask(state, player:str) -> float:
         if winner is None:
             return 0
         else:
-            return 74 if winner == player else -74
+            return -74 if winner == player else 74
     else:
         opponent = "W" if player == "B" else "B"
         player_points = 0

@@ -61,9 +61,9 @@ def evaluate_custom(state, player:str) -> float: # uses mask + mobility + coin
         player_mobility = player_moves - opponent_moves
         player_points = 0
         player_coins = 0
-        points_weight = 0.4
+        points_weight = 0.6
         coins_weight = 0.1
-        moves_weight = 0.4
+        moves_weight = 0.3
         board = state.board.tiles
         for tile_line, mask_line in zip(board, EVAL_TEMPLATE):
             for tile, value in zip(tile_line, mask_line):
