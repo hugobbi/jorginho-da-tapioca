@@ -1,7 +1,4 @@
-import random
 from typing import Tuple
-from ..othello.gamestate import GameState
-from ..othello.board import Board
 from .minimax import minimax_move
 
 # Voce pode criar funcoes auxiliares neste arquivo
@@ -21,24 +18,24 @@ EVAL_TEMPLATE = [
     [100, -30, 6, 2, 2, 6, -30, 100]
 ]
 
-
 def make_move(state) -> Tuple[int, int]:
     """
-    Returns a move for the given game state
+    Returns a move for the given game state. 
+    Consider that this will be called in the Othello tournament situation,
+    so you should call the best implementation you got.
+
     :param state: state to make the move
     :return: (int, int) tuple with x, y coordinates of the move (remember: 0 is the first row/column)
     """
 
     # o codigo abaixo apenas retorna um movimento aleatorio valido para
     # a primeira jogada 
-    # Remova-o e coloque uma chamada para o minimax_move (que vc implementara' no modulo minimax).
-    # A chamada a minimax_move deve receber sua funcao evaluate como parametro.
+    # Remova-o e coloque a sua implementacao da poda alpha-beta
 
-    max_depth = 20
+    max_depth = 15
     return minimax_move(state, max_depth, evaluate_custom)
 
-
-def evaluate_custom(state, player:str) -> float: # uses mask + mobility
+def evaluate_custom(state, player:str) -> float: # uses mask + mobility + coin
     """
     Evaluates an othello state from the point of view of the given player. 
     If the state is terminal, returns its utility. 
@@ -74,3 +71,5 @@ def evaluate_custom(state, player:str) -> float: # uses mask + mobility
                     player_coins -= 1
                     player_points -= value
         return player_points * points_weight + player_coins * coins_weight + player_mobility * moves_weight
+
+

@@ -68,7 +68,8 @@ a função custom ganhou todos os 10, somando 30 vitórias.
 
 (IV): Implementação escolhida para o torneio
 
-A implementação escolhida para o torneio foi a customizada, p_valor = 0.3, p_peça = 0.1 e p_mobilidade = 0.6, profundidade máxima 15 e tempo limite de 4.5 segundos.
+A implementação escolhida para o torneio foi a customizada, com p_valor = 0.3, p_peça = 0.1 e p_mobilidade = 0.6, profundidade máxima 15 e tempo limite de 4.
+5 segundos.
 
 Feedback:
 
